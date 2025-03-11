@@ -21,6 +21,7 @@ class LeaspyFitTestMixin(MatplotlibTestCase):
         *,
         algo_name: Optional[str] = "mcmc_saem",
         algo_params: Optional[dict] = None,
+        obs_models: str = None,
         # change default parameters for logs so everything is tested despite the very few iterations in tests
         # TODO reactivate plotting once FitOutputManager & Plotter are ready
         # logs_kws: dict = dict(console_print_periodicity=50, save_periodicity=20, plot_periodicity=100),
@@ -63,7 +64,7 @@ class LeaspyFitTestMixin(MatplotlibTestCase):
         algo_params = algo_params or {"n_iter": 100, "seed": 0}
         check_kws = check_kws or {}
         logs_kws = logs_kws or {
-            "console_print_periodicity": 50,
+            "print_periodicity": 50,
             "save_periodicity": None,
             "plot_periodicity": None,
         }
