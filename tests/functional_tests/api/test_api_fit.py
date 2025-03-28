@@ -163,7 +163,7 @@ class LeaspyFitTest(LeaspyFitTestMixin):
         self.generic_fit(
             "logistic",
             "logistic_scalar_noise",
-            obs_models=observation_model_factory("gaussian-scalar"),
+            obs_models="gaussian-scalar",
             source_dimension=2,
             check_kws=DEFAULT_CHECK_KWS,
         )
@@ -174,7 +174,7 @@ class LeaspyFitTest(LeaspyFitTestMixin):
         self.generic_fit(
             "logistic",
             "logistic_diag_noise",
-            obs_models=observation_model_factory("gaussian-diagonal", dimension=4),
+            obs_models="gaussian-diagonal",
             source_dimension=2,
             check_kws=DEFAULT_CHECK_KWS,
         )
@@ -184,7 +184,7 @@ class LeaspyFitTest(LeaspyFitTestMixin):
         self.generic_fit(
             "logistic",
             "logistic_diag_noise_fast_gibbs",
-            obs_models=observation_model_factory("gaussian-diagonal", dimension=4),
+            obs_models="gaussian-diagonal",
             source_dimension=2,
             algo_params={"n_iter": 100, "seed": 0, "sampler_pop": "FastGibbs"},
             check_kws=DEFAULT_CHECK_KWS,
@@ -195,7 +195,7 @@ class LeaspyFitTest(LeaspyFitTestMixin):
         self.generic_fit(
             "logistic",
             "logistic_diag_noise_mh",
-            obs_models=observation_model_factory("gaussian-diagonal", dimension=4),
+            obs_models="gaussian-diagonal",
             source_dimension=2,
             algo_params={
                 "n_iter": 100,
@@ -210,7 +210,7 @@ class LeaspyFitTest(LeaspyFitTestMixin):
         self.generic_fit(
             "logistic",
             "logistic_diag_noise_custom",
-            obs_models=observation_model_factory("gaussian-diagonal", dimension=4),
+            obs_models="gaussian-diagonal",
             source_dimension=0,
             algo_params={
                 "n_iter": 100,
@@ -239,7 +239,7 @@ class LeaspyFitTest(LeaspyFitTestMixin):
         self.generic_fit(
             "shared_speed_logistic",
             "logistic_parallel_scalar_noise",
-            obs_models=observation_model_factory("gaussian-scalar"),
+            obs_models="gaussian-scalar",
             source_dimension=2,
         )
 
@@ -247,7 +247,7 @@ class LeaspyFitTest(LeaspyFitTestMixin):
         self.generic_fit(
             "shared_speed_logistic",
             "logistic_parallel_diag_noise",
-            obs_models=observation_model_factory("gaussian-diagonal", dimension=4),
+            obs_models="gaussian-diagonal",
             source_dimension=2,
         )
 
@@ -255,8 +255,7 @@ class LeaspyFitTest(LeaspyFitTestMixin):
         self.generic_fit(
             "shared_speed_logistic",
             "logistic_parallel_diag_noise_no_source",
-            obs_models=observation_model_factory("gaussian-diagonal", dimension=4),
-            source_dimension=0,
+            obs_models="gaussian-diagonal",
         )
 
     def test_fit_univariate_logistic(self):
@@ -287,7 +286,7 @@ class LeaspyFitTest(LeaspyFitTestMixin):
             "joint_diagonal",
             check_kws=DEFAULT_CHECK_KWS,
             check_model=True,
-            obs_models=observation_model_factory("gaussian-diagonal", dimension=4),
+            obs_models="gaussian-diagonal",
             source_dimension=2,
         )
 
@@ -309,7 +308,7 @@ class LeaspyFitTest(LeaspyFitTestMixin):
         self.generic_fit(
             "linear",
             "linear_scalar_noise",
-            obs_models=observation_model_factory("gaussian-scalar"),
+            obs_models="gaussian-scalar",
             source_dimension=2,
         )
 
@@ -318,7 +317,7 @@ class LeaspyFitTest(LeaspyFitTestMixin):
         self.generic_fit(
             "linear",
             "linear_diag_noise",
-            obs_models=observation_model_factory("gaussian-diagonal", dimension=4),
+            obs_models="gaussian-diagonal",
             source_dimension=2,
         )
 
@@ -326,7 +325,7 @@ class LeaspyFitTest(LeaspyFitTestMixin):
         self.generic_fit(
             "logistic",
             "logistic_binary",
-            obs_models=observation_model_factory("bernoulli"),
+            obs_models="bernoulli",
             source_dimension=2,
         )
 
@@ -335,7 +334,7 @@ class LeaspyFitTest(LeaspyFitTestMixin):
         self.generic_fit(
             "shared_speed_logistic",
             "logistic_parallel_binary",
-            obs_models=observation_model_factory("bernoulli"),
+            obs_models="bernoulli",
             source_dimension=2,
         )
 

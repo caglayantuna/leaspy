@@ -77,7 +77,7 @@ class LeaspyAPITest(
         model, data = self.generic_fit(
             model_name,
             filename_expected_model,
-            obs_models=obs_models,
+            observational_model=obs_models,
             **model_hyperparams,
             algo_name=fit_algo,
             algo_params=fit_algo_params,
