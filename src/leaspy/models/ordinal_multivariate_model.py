@@ -25,6 +25,7 @@ from leaspy.variables.specs import (
     ModelParameter,
     NamedVariables,
     PopulationLatentVariable,
+    VariableNameToValueMapping,
 )
 
 
@@ -187,7 +188,7 @@ class OrdinalMultivariateModel(LogisticMultivariateModel):
         self,
         dataset: Dataset,
         method: InitializationMethod,
-    ) -> VariablesValuesRO:
+    ) -> VariableNameToValueMapping:
         """Compute initial values for model parameters and for the ordinal deltas parameters
         and initializes ordinal noise_model attributes.
         """
