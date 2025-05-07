@@ -136,3 +136,8 @@ class LMEModel(StatelessModel):
         y = X @ (self.parameters["fe_params"] + re_params)
 
         return torch.tensor(y, dtype=torch.float32).reshape((1, -1, 1))
+
+    def _initialize_observation_model(
+        self, dimension: int, observational_model: str = None
+    ) -> None:
+        pass

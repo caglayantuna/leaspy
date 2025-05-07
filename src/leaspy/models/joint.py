@@ -1,5 +1,5 @@
 import warnings
-from typing import Optional
+from typing import Iterable, Optional
 
 import pandas as pd
 import torch
@@ -448,3 +448,49 @@ class JointModel(LogisticModel):
             ),
             2,
         )
+
+    def _initialize_observation_model(
+        self, dimension: int, observational_model: str = None
+    ) -> None:
+        if observational_model is None:
+            observational_model = []
+        self.obs_models = []
+        if (dimension == 1) or (self.source_dimension == 0):
+            if "weibull-right-censored-with-sources" in observational_model:
+                raise LeaspyInputError(
+                    "You cannot use a weibull with sources for an univariate model"
+                )
+            if "weibull-right-censored" not in observational_model:
+                self.obs_models += (
+                    observation_model_factory(
+                        "weibull-right-censored",
+                        nu="nu",
+                        rho="rho",
+                        xi="xi",
+                        tau="tau",
+                    ),
+                )
+                observational_model += ["weibull-right-censored"]
+        else:
+            if "weibull-right-censored" in observational_model:
+                warnings.warn(
+                    "You are using a multivariate model with a weibull model without sources"
+                )
+            elif "weibull-right-censored-with-sources" not in observational_model:
+                self.obs_models += (
+                    observation_model_factory(
+                        "weibull-right-censored-with-sources",
+                        nu="nu",
+                        rho="rho",
+                        zeta="zeta",
+                        xi="xi",
+                        tau="tau",
+                        sources="sources",
+                    ),
+                )
+                observational_model += ["weibull-right-censored-with-sources"]
+        if "weibull-right-censored-with-sources" in observational_model:
+            variables_to_track = ["zeta", "survival_shifts"]
+            self.tracked_variables = self.tracked_variables.union(
+                set(variables_to_track)
+            )

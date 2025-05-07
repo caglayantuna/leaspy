@@ -41,7 +41,6 @@ class ModelFactoryTest(ModelFactoryTestMixin):
     def _generic_univariate_hyperparameters_checker(self, model_name: str) -> None:
         model = model_factory(model_name, features=["t1"])
         self.assertEqual(model.features, ["t1"])
-        self.assertIsInstance(model.obs_models[0], FullGaussianObservationModel)
         self.assertEqual(model.dimension, 1)
         self.assertEqual(model.source_dimension, 0)
 
@@ -60,7 +59,6 @@ class ModelFactoryTest(ModelFactoryTestMixin):
             dimension=3,
         )
         self.assertEqual(model.features, ["t1", "t2", "t3"])
-        self.assertIsInstance(model.obs_models[0], FullGaussianObservationModel)
         self.assertEqual(model.dimension, 3)  # TODO: automatic from length of features?
         self.assertEqual(model.source_dimension, 2)
 

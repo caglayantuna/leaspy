@@ -15,7 +15,6 @@ class UnivariateModelTest(ManifoldModelTestMixin):
         self.assertEqual(model.name, "test_model")
         self.assertEqual(model.dimension, 1)
         self.assertEqual(model.source_dimension, 0)
-        self.assertIsInstance(model.obs_models[0], FullGaussianObservationModel)
         model.initialize()
         self.check_common_attrs(model)
 
