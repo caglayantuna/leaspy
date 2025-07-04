@@ -229,161 +229,97 @@ class DatasetTest(LeaspyTestCase):
         masked_indices = (1 - dataset.mask).nonzero(as_tuple=False).tolist()
         self.assertEqual(masked_indices, expected_masked_indices)
 
-        # test the ordinal encodings
-        for case_name, (ordinal_infos, warnings_unexpected, warnings_missing) in {
-            "'true' ordinal infos": (
-                {
-                    "max_levels": {
-                        "FT_0-3": 3,
-                        "FT_0-2": 2,
-                    },
-                    "max_level": 3,
-                },
-                None,  # warnings unexpected
-                None,  # warnings missing
-            ),
-            "'true' ordinal infos for features but faking a higher max_level": (
-                {
-                    "max_levels": {
-                        "FT_0-3": 3,
-                        "FT_0-2": 2,
-                    },
-                    "max_level": 5,  # fake to check behavior
-                },
-                None,
-                None,
-            ),
-            "ordinal infos with missing code=[3, 4] for FT_0-2": (
-                {
-                    "max_levels": {
-                        "FT_0-3": 3,
-                        "FT_0-2": 4,  # +2
-                    },
-                    "max_level": 4,
-                },
-                None,
-                "Some features have missing codes:\n- FT_0-2 [[0..4]]: [3, 4] are missing",
-            ),
-            "ordinal infos with unexpected code=[3] for FT_0-3": (
-                {
-                    "max_levels": {
-                        "FT_0-3": 2,  # -1
-                        "FT_0-2": 2,
-                    },
-                    "max_level": 3,
-                },
-                "Some features have unexpected codes (they were clipped to the maximum known level):\n- FT_0-3 [[0..2]]: [3] were unexpected",
-                None,
-            ),
-        }.items():
-            with self.subTest(case_name=case_name):
-                # we encode the levels for simplicity of tests
-                lvls = torch.eye(1 + ordinal_infos["max_level"]).long()
-                sfb = (1 - lvls.cumsum(-1))[..., :-1].tolist()
-                lvls = lvls.tolist()
+        # we encode the levels for simplicity of tests
+        lvls = torch.eye(1 + max(dataset.get_max_levels().values())).long()
+        sfb = (1 - lvls.cumsum(-1))[..., :-1].tolist()
+        lvls = lvls.tolist()
 
-                # the potentially clipped code
-                l_max_levels = list(ordinal_infos["max_levels"].values())
+        # the potentially clipped code
+        l_max_levels = list(dataset.get_max_levels().values())
 
-                expected_pdf = torch.tensor(
+        expected_pdf = torch.tensor(
+            [
+                [
                     [
-                        [
-                            [
-                                lvls[min(1, l_max_levels[0])],
-                                lvls[0],
-                                lvls[min(3, l_max_levels[0])],
-                                lvls[min(2, l_max_levels[0])],
-                            ],
-                            [
-                                lvls[min(1, l_max_levels[0])],
-                                lvls[min(1, l_max_levels[0])],
-                                lvls[nan_coding],
-                                lvls[nan_coding],
-                            ],
-                        ],  # FT1
-                        [
-                            [
-                                lvls[min(1, l_max_levels[1])],
-                                lvls[0],
-                                lvls[nan_coding],
-                                lvls[min(2, l_max_levels[1])],
-                            ],
-                            [
-                                lvls[0],
-                                lvls[min(1, l_max_levels[1])],
-                                lvls[nan_coding],
-                                lvls[nan_coding],
-                            ],
-                        ],  # FT2
-                    ]
-                )
-                expected_sf = torch.tensor(
+                        lvls[min(1, l_max_levels[0])],
+                        lvls[0],
+                        lvls[min(3, l_max_levels[0])],
+                        lvls[min(2, l_max_levels[0])],
+                    ],
                     [
-                        [
-                            [
-                                sfb[min(1, l_max_levels[0])],
-                                sfb[0],
-                                sfb[min(3, l_max_levels[0])],
-                                sfb[min(2, l_max_levels[0])],
-                            ],
-                            [
-                                sfb[min(1, l_max_levels[0])],
-                                sfb[min(1, l_max_levels[0])],
-                                sfb[nan_coding],
-                                sfb[nan_coding],
-                            ],
-                        ],  # FT1
-                        [
-                            [
-                                sfb[min(1, l_max_levels[1])],
-                                sfb[0],
-                                sfb[nan_coding],
-                                sfb[min(2, l_max_levels[1])],
-                            ],
-                            [
-                                sfb[0],
-                                sfb[min(1, l_max_levels[1])],
-                                sfb[nan_coding],
-                                sfb[nan_coding],
-                            ],
-                        ],  # FT2
-                    ]
-                )
-                # ft, ind, vis, lvl <-> ind, vis, ft, lvl
-                expected_pdf = expected_pdf.transpose(0, 1).transpose(1, 2)
-                expected_sf = expected_sf.transpose(0, 1).transpose(1, 2)
+                        lvls[min(1, l_max_levels[0])],
+                        lvls[min(1, l_max_levels[0])],
+                        lvls[nan_coding],
+                        lvls[nan_coding],
+                    ],
+                ],  # FT1
+                [
+                    [
+                        lvls[min(1, l_max_levels[1])],
+                        lvls[0],
+                        lvls[nan_coding],
+                        lvls[min(2, l_max_levels[1])],
+                    ],
+                    [
+                        lvls[0],
+                        lvls[min(1, l_max_levels[1])],
+                        lvls[nan_coding],
+                        lvls[nan_coding],
+                    ],
+                ],  # FT2
+            ]
+        )
+        expected_sf = torch.tensor(
+            [
+                [
+                    [
+                        sfb[min(1, l_max_levels[0])],
+                        sfb[0],
+                        sfb[min(3, l_max_levels[0])],
+                        sfb[min(2, l_max_levels[0])],
+                    ],
+                    [
+                        sfb[min(1, l_max_levels[0])],
+                        sfb[min(1, l_max_levels[0])],
+                        sfb[nan_coding],
+                        sfb[nan_coding],
+                    ],
+                ],  # FT1
+                [
+                    [
+                        sfb[min(1, l_max_levels[1])],
+                        sfb[0],
+                        sfb[nan_coding],
+                        sfb[min(2, l_max_levels[1])],
+                    ],
+                    [
+                        sfb[0],
+                        sfb[min(1, l_max_levels[1])],
+                        sfb[nan_coding],
+                        sfb[nan_coding],
+                    ],
+                ],  # FT2
+            ]
+        )
+        # ft, ind, vis, lvl <-> ind, vis, ft, lvl
+        expected_pdf = expected_pdf.transpose(0, 1).transpose(1, 2)
+        expected_sf = expected_sf.transpose(0, 1).transpose(1, 2)
 
-                # reset the cached one-hot encoding in dataset... (otherwise no recomputation with new ordinal_infos!)
-                dataset._one_hot_encoding = None
+        # reset the cached one-hot encoding in dataset... (otherwise no recomputation with new ordinal_infos!)
+        dataset._one_hot_encoding = None
 
-                with warnings.catch_warnings(record=True) as ws_first:
-                    # some warnings may occur here depending on `ordinal_infos`!
-                    warnings.simplefilter("always")
-                    pdf = dataset.get_one_hot_encoding(
-                        sf=False, ordinal_infos=ordinal_infos
-                    )
+        with warnings.catch_warnings(record=True) as ws_first:
+            # some warnings may occur here depending on `ordinal_infos`!
+            warnings.simplefilter("always")
+            pdf = dataset.get_one_hot_encoding(sf=False)
 
-                with warnings.catch_warnings(record=True) as ws_second:
-                    # no warnings expected the second time we retrieve the data!
-                    warnings.simplefilter("always")
-                    sf = dataset.get_one_hot_encoding(
-                        sf=True, ordinal_infos=ordinal_infos
-                    )
+        with warnings.catch_warnings(record=True) as ws_second:
+            # no warnings expected the second time we retrieve the data!
+            warnings.simplefilter("always")
+            sf = dataset.get_one_hot_encoding(sf=True)
 
-                self.assertAllClose(pdf, expected_pdf)
-                self.assertAllClose(sf, expected_sf)
-
-                ws_second = [str(w.message) for w in ws_second]
-                self.assertEqual(ws_second, [])
-
-                expected_ws_first = []
-                if warnings_unexpected is not None:
-                    expected_ws_first.append(warnings_unexpected)
-                if warnings_missing is not None:
-                    expected_ws_first.append(warnings_missing)
-
-                ws_first = [str(w.message) for w in ws_first]
-                self.assertEqual(ws_first, expected_ws_first)
+        self.assertAllClose(pdf, expected_pdf)
+        self.assertAllClose(sf, expected_sf)
 
     def test_get_one_hot_encoding_with_decimals(self):
         df = pd.DataFrame(
@@ -396,52 +332,7 @@ class DatasetTest(LeaspyTestCase):
         )
         dataset = Dataset(Data.from_dataframe(df))
         with self.assertRaisesRegex(ValueError, "integers"):
-            dataset.get_one_hot_encoding(sf=False, ordinal_infos={})
-
-    def test_get_one_hot_encoding_bad_fts(self):
-        df = pd.DataFrame(
-            {
-                "ID": ["S1", "S1", "S1", "S1", "S2", "S2"],
-                "TIME": [50.0, 51.0, 53.0, 59.0, 35.3, 43.9],
-                "X": [1, 0, 3, 2, 1, 1],
-                "Y": [1, 0, nan, 2, nan, 1],
-            }
-        )
-        # create the dataset
-        dataset = Dataset(Data.from_dataframe(df))
-        err_rx = "not consistent with features"
-
-        ordinal_infos = {
-            "max_levels": {
-                # bad vars order
-                "Y": 3,
-                "X": 2,
-            },
-            "max_level": 3,
-        }
-        with self.assertRaisesRegex(ValueError, err_rx):
-            dataset.get_one_hot_encoding(sf=False, ordinal_infos=ordinal_infos)
-
-        ordinal_infos = {
-            "max_levels": {
-                "X": 3,
-                "Y": 2,
-                "Z": 3,  # extra var
-            },
-            "max_level": 3,
-        }
-        with self.assertRaisesRegex(ValueError, err_rx):
-            dataset.get_one_hot_encoding(sf=False, ordinal_infos=ordinal_infos)
-
-        ordinal_infos = {
-            "max_levels": {
-                "X": 3,
-                # missing var
-            },
-            "max_level": 3,
-        }
-        with self.assertRaisesRegex(ValueError, err_rx):
-            dataset.get_one_hot_encoding(sf=False, ordinal_infos=ordinal_infos)
+            dataset.get_one_hot_encoding(sf=False)
 
     def test_get_one_hot_encoding_errors_not_int(self):
         df = pd.DataFrame(
@@ -461,7 +352,7 @@ class DatasetTest(LeaspyTestCase):
             "max_level": 10,
         }
         with self.assertRaisesRegex(ValueError, "integer"):
-            dataset.get_one_hot_encoding(sf=False, ordinal_infos=ordinal_infos)
+            dataset.get_one_hot_encoding(sf=False)
 
     def test_get_one_hot_encoding_errors_not_positive(self):
         df = pd.DataFrame(
@@ -481,42 +372,4 @@ class DatasetTest(LeaspyTestCase):
             "max_level": 10,
         }
         with self.assertRaisesRegex(ValueError, ">= 0"):
-            dataset.get_one_hot_encoding(sf=False, ordinal_infos=ordinal_infos)
-
-    def test_get_one_hot_encoding_many_warnings(self):
-        df = pd.DataFrame(
-            {
-                "ID": ["S1", "S1", "S1", "S1", "S2", "S2"],
-                "TIME": [50.0, 51.0, 53.0, 59.0, 35.3, 43.9],
-                "X": [1, 0, 5, 1, 6, 1],
-                "Y": [1, 1, nan, 4, nan, 4],
-            }
-        )
-        # create the dataset
-        dataset = Dataset(Data.from_dataframe(df))
-
-        ordinal_infos = {
-            "max_levels": {
-                "X": 3,
-                "Y": 2,
-            },
-            "max_level": 3,
-        }
-
-        # only check combinations of warnings (results were checked before)
-        with warnings.catch_warnings(record=True) as ws:
-            warnings.simplefilter("always")
-            _ = dataset.get_one_hot_encoding(sf=False, ordinal_infos=ordinal_infos)
-
-        ws = [str(w.message) for w in ws]
-        self.assertEqual(
-            ws,
-            [
-                "Some features have unexpected codes (they were clipped to the maximum known level):"
-                "\n- X [[0..3]]: [5, 6] were unexpected"
-                "\n- Y [[0..2]]: [4] were unexpected",
-                "Some features have missing codes:"
-                "\n- X [[0..3]]: [2, 3] are missing"
-                "\n- Y [[0..2]]: [0, 2] are missing",
-            ],
-        )
+            dataset.get_one_hot_encoding(sf=False)

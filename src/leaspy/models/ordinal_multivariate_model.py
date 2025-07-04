@@ -199,7 +199,7 @@ class OrdinalMultivariateModel(LogisticMultivariateModel):
         parameters = super()._compute_initial_values_for_model_parameters(
             dataset, method
         )
-        df = self._get_dataframe_from_dataset(dataset)
+        df = dataset.to_pandas(apply_headers=True)
         deltas = {}
         for feature, s in df.items():  # preserve feature order
             max_level = int(
