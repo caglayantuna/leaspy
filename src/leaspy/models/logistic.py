@@ -110,8 +110,8 @@ class LogisticInitializationMixin:
 class LogisticModel(LogisticInitializationMixin, RiemanianManifoldModel):
     """Manifold model for multiple variables of interest (logistic formulation)."""
 
-    def __init__(self, name: str, **kwargs):
-        super().__init__(name, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def get_variables_specs(self) -> NamedVariables:
         """

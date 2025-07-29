@@ -38,8 +38,6 @@ class RiemanianManifoldModel(TimeReparametrizedModel):
 
     Parameters
     ----------
-    name : :obj:`str`
-        The name of the model.
     **kwargs
         Hyperparameters of the model (including `noise_model`)
 
@@ -51,11 +49,10 @@ class RiemanianManifoldModel(TimeReparametrizedModel):
 
     def __init__(
         self,
-        name: str,
         variables_to_track: Optional[Iterable[VariableName]] = None,
         **kwargs,
     ):
-        super().__init__(name, **kwargs)
+        super().__init__(**kwargs)
         default_variables_to_track = [
             "g",
             "v0",

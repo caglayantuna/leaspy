@@ -16,7 +16,6 @@ class LeaspyFitTestMixin(MatplotlibTestCase):
 
     def generic_fit(
         self,
-        model_name: str,
         model_codename: str,
         *,
         algo_name: Optional[str] = "mcmc_saem",
@@ -35,8 +34,6 @@ class LeaspyFitTestMixin(MatplotlibTestCase):
 
         Parameters
         ----------
-        model_name : str
-            The name of the model.
         model_codename : str
             The name of the model used to retrieve the expected model filename.
         algo_name : str, optional

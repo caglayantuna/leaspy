@@ -17,7 +17,6 @@ class LeaspyAPITest(
 ):
     def generic_usecase(
         self,
-        model_name: str,
         model_codename: str,
         *,
         personalization_algo: str,
@@ -42,8 +41,6 @@ class LeaspyAPITest(
 
         Parameters
         ----------
-        model_name : str
-            The name of the model.
         model_codename : str
             The name of the model used to retrieve the expected model filename.
         personalization_algo : str
@@ -75,7 +72,6 @@ class LeaspyAPITest(
 
         # no loss returned for fit for now
         model, data = self.generic_fit(
-            model_name,
             filename_expected_model,
             **model_hyperparams,
             algo_name=fit_algo,
@@ -118,7 +114,6 @@ class LeaspyAPITest(
 
     def test_usecase_logistic_scalar_noise(self):
         self.generic_usecase(
-            "logistic",
             model_codename="logistic_scalar_noise",
             obs_models="gaussian-scalar",
             source_dimension=2,
@@ -134,7 +129,6 @@ class LeaspyAPITest(
 
     def test_usecase_univariate_joint(self):
         self.generic_usecase(
-            "joint",
             model_codename="univariate_joint",
             fit_check_kws={"atol": 1e-2, "rtol": 1e-2},
             personalization_algo="mode_posterior",
@@ -171,7 +165,6 @@ class LeaspyAPITest(
             "tau_std": {"atol": 0.3},
         }
         self.generic_usecase(
-            "logistic",
             model_codename="logistic_diag_noise",
             obs_models="gaussian-diagonal",
             source_dimension=2,
@@ -188,7 +181,6 @@ class LeaspyAPITest(
 
     def test_usecase_logistic_binary(self):
         self.generic_usecase(
-            "logistic",
             model_codename="logistic_binary",
             obs_models="bernoulli",
             source_dimension=2,

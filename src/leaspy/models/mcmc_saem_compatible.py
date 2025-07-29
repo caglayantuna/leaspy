@@ -29,9 +29,6 @@ class McmcSaemCompatibleModel(StatefulModel):
 
     Parameters
     ----------
-    name : :obj:`str`
-        The name of the model.
-
     obs_models : :class:`~leaspy.models.obs_models` or :class:`~typing.Iterable` [:class:`~leaspy.models.obs_models`]
         The noise model for observations (keyword-only parameter).
 
@@ -46,8 +43,6 @@ class McmcSaemCompatibleModel(StatefulModel):
     ----------
     is_initialized : :obj:`bool`
         Indicates if the model is initialized.
-    name : :obj:`str`
-        The model's name.
     features : :obj:`list` [:obj:`str`]
         Names of the model features.
     parameters : :obj:`dict`
@@ -62,7 +57,6 @@ class McmcSaemCompatibleModel(StatefulModel):
 
     def __init__(
         self,
-        name: str,
         *,
         # TODO? if we'd allow to pass a state there should be a all bunch of checks I guess? only "equality" of DAG is OK?
         # (WIP: cf. comment regarding inclusion of state here)
@@ -72,7 +66,7 @@ class McmcSaemCompatibleModel(StatefulModel):
         fit_metrics: Optional[dict[str, float]] = None,
         **kwargs,
     ):
-        super().__init__(name, **kwargs)
+        super().__init__(**kwargs)
         if isinstance(obs_models, ObservationModel):
             obs_models = (obs_models,)
         self.obs_models = tuple(obs_models)

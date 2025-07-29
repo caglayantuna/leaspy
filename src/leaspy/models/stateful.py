@@ -31,9 +31,8 @@ class StatefulModel(BaseModel):
 
     Parameters
     ----------
-
-    name : :obj:`str`
-        The name of the model.
+    **kwargs
+        Hyperparameters of the model.
 
     Attributes
     ----------
@@ -46,8 +45,8 @@ class StatefulModel(BaseModel):
 
     """
 
-    def __init__(self, name: str, **kwargs):
-        super().__init__(name, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self._state: Optional[State] = None
         self.tracked_variables: set[str] = set()
 

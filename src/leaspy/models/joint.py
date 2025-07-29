@@ -34,9 +34,6 @@ class JointModel(LogisticModel):
 
     Parameters
     ----------
-    name : :obj:`str`
-        The name of the model.
-
     **kwargs
         Hyperparameters of the model (including `noise_model`)
 
@@ -49,8 +46,8 @@ class JointModel(LogisticModel):
 
     init_tolerance: float = 0.3
 
-    def __init__(self, name: str, **kwargs):
-        super().__init__(name, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self._configure_observation_models()
         self._configure_variables_to_track()
 

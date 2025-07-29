@@ -32,8 +32,6 @@ class TimeReparametrizedModel(McmcSaemCompatibleModel):
 
     Parameters
     ----------
-    name : :obj:`str`
-        Name of the model.
     source_dimension : Optional[:obj:`int`]
         Number of sources. Dimension of spatial components (default is None).
     **kwargs
@@ -52,7 +50,6 @@ class TimeReparametrizedModel(McmcSaemCompatibleModel):
 
     def __init__(
         self,
-        name: str,
         source_dimension: Optional[int] = None,
         **kwargs,
     ):
@@ -95,7 +92,7 @@ class TimeReparametrizedModel(McmcSaemCompatibleModel):
             kwargs["obs_models"] = (
                 observation_model_factory(observation_models, dimension=dimension),
             )
-        super().__init__(name, **kwargs)
+        super().__init__(**kwargs)
         self._source_dimension = self._validate_source_dimension(source_dimension)
 
     @property
@@ -435,7 +432,7 @@ class TimeReparametrizedModel(McmcSaemCompatibleModel):
     def put_individual_parameters(self, state: State, dataset: Dataset):
         """
         Initialize individual latent parameters in the given state if not already set.
-        
+
         Parameters
         ----------
         state : State

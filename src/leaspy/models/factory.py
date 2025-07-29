@@ -68,15 +68,15 @@ def model_factory(
     name = ModelName(name)
     instance_name = instance_name or name.value
     if name == ModelName.JOINT:
-        return JointModel(instance_name, **kwargs)
+        return JointModel(**kwargs)
     if name == ModelName.LOGISTIC:
-        return LogisticModel(instance_name, **kwargs)
+        return LogisticModel(**kwargs)
     if name == ModelName.LINEAR:
-        return LinearModel(instance_name, **kwargs)
+        return LinearModel(**kwargs)
     if name == ModelName.SHARED_SPEED_LOGISTIC:
-        return SharedSpeedLogisticModel(instance_name, **kwargs)
+        return SharedSpeedLogisticModel(**kwargs)
     if name == ModelName.LME:
-        return LMEModel(instance_name, **kwargs)
+        return LMEModel(**kwargs)
     if name == ModelName.CONSTANT:
         return ConstantModel(instance_name, **kwargs)
     if name == ModelName.MIXTURE_LOGISTIC:

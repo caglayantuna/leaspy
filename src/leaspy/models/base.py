@@ -395,9 +395,9 @@ class BaseModel(ModelInterface):
     It implements the :class:`~leaspy.models.ModelInterface`.
     """
 
-    def __init__(self, name: str, **kwargs):
+    def __init__(self, **kwargs):
         self._is_initialized: bool = False
-        self._name = name
+        self._name = self.__class__.__name__
         user_provided_dimension, user_provided_features = (
             self._validate_user_provided_dimension_and_features_at_init(**kwargs)
         )
