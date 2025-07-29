@@ -106,7 +106,6 @@ class LeaspyPersonalizeTest(LeaspyPersonalizeTestMixin):
 
     def _personalize_generic(
         self,
-        model_name: str,
         algo_name: str,
         algo_kws: Optional[dict] = None,
     ):
@@ -115,13 +114,12 @@ class LeaspyPersonalizeTest(LeaspyPersonalizeTestMixin):
             warnings.simplefilter("always")
             # only look at loss to detect any regression in personalization
             ips, _ = self.generic_personalization(
-                model_name, algo_name=algo_name, seed=0, **algo_kws
+                algo_name=algo_name, seed=0, **algo_kws
             )
 
         self.check_consistency_of_personalization_outputs(
             ips,
             msg={
-                "model_name": model_name,
                 "perso_name": algo_name,
                 "perso_kws": algo_kws,
             },
@@ -522,7 +520,6 @@ class LeaspyPersonalizeRobustnessDataSparsityTest(LeaspyPersonalizeTestMixin):
 
     def _robustness_to_data_sparsity(
         self,
-        model_name: str,
         algo_name: str,
         algo_kws: Optional[dict] = None,
         rtol: float = 2e-2,
@@ -530,20 +527,17 @@ class LeaspyPersonalizeRobustnessDataSparsityTest(LeaspyPersonalizeTestMixin):
     ) -> None:
         algo_kws = algo_kws or {}
         subtest = {
-            "model_name": model_name,
             "perso_name": algo_name,
             "perso_kws": algo_kws,
         }
         common_params = dict(algo_name=algo_name, seed=0, **algo_kws)
 
         ips_sparse, _ = self.generic_personalization(
-            model_name,
             **common_params,
             data_path="missing_data/sparse_data.csv",
             data_kws={"drop_full_nan": False},
         )
         ips_merged, _ = self.generic_personalization(
-            model_name,
             **common_params,
             data_path="missing_data/merged_data.csv",
         )

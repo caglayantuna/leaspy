@@ -78,7 +78,7 @@ class LeaspyFitTestMixin(MatplotlibTestCase):
         expected_model_path = self.from_fit_model_path(model_codename)
         inexistant_model = not os.path.exists(expected_model_path)
 
-        # check that values in already saved file are same than the ones in fitted model
+        # check that values in already saved file are same than the ones in fitted model+-
         if check_model:
             if inexistant_model:
                 warnings.warn(
@@ -157,7 +157,6 @@ class LeaspyFitTest(LeaspyFitTestMixin):
     def test_fit_logistic_scalar_noise(self):
         """Test MCMC-SAEM."""
         self.generic_fit(
-            "logistic",
             "logistic_scalar_noise",
             obs_models=observation_model_factory("gaussian-scalar"),
             source_dimension=2,
@@ -168,7 +167,6 @@ class LeaspyFitTest(LeaspyFitTestMixin):
         """Test MCMC-SAEM (1 noise per feature)."""
         # TODO: dimension should not be needed at this point...
         self.generic_fit(
-            "logistic",
             "logistic_diag_noise",
             obs_models=observation_model_factory("gaussian-diagonal", dimension=4),
             source_dimension=2,
@@ -178,7 +176,6 @@ class LeaspyFitTest(LeaspyFitTestMixin):
     def test_fit_logistic_diagonal_noise_fast_gibbs(self):
         # TODO: dimension should not be needed at this point...
         self.generic_fit(
-            "logistic",
             "logistic_diag_noise_fast_gibbs",
             obs_models=observation_model_factory("gaussian-diagonal", dimension=4),
             source_dimension=2,
@@ -189,7 +186,6 @@ class LeaspyFitTest(LeaspyFitTestMixin):
     def test_fit_logistic_diagonal_noise_mh(self):
         # TODO: dimension should not be needed at this point...
         self.generic_fit(
-            "logistic",
             "logistic_diag_noise_mh",
             obs_models=observation_model_factory("gaussian-diagonal", dimension=4),
             source_dimension=2,
@@ -204,7 +200,6 @@ class LeaspyFitTest(LeaspyFitTestMixin):
     def test_fit_logistic_diagonal_noise_with_custom_tuning_no_sources(self):
         # TODO: dimension should not be needed at this point...
         self.generic_fit(
-            "logistic",
             "logistic_diag_noise_custom",
             obs_models=observation_model_factory("gaussian-diagonal", dimension=4),
             source_dimension=0,

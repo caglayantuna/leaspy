@@ -28,9 +28,7 @@ class ModelName(str, Enum):
     MIXTURE_LOGISTIC = "mixture_logistic"
 
 
-def model_factory(
-    name: Union[str, ModelName], instance_name: Optional[str] = None, **kwargs
-) -> BaseModel:
+def model_factory(name: Union[str, ModelName], **kwargs) -> BaseModel:
     """
     Return the model object corresponding to ``name`` arg with possible ``kwargs``.
 
@@ -66,7 +64,6 @@ def model_factory(
         with the provided arguments.
     """
     name = ModelName(name)
-    instance_name = instance_name or name.value
     if name == ModelName.JOINT:
         return JointModel(**kwargs)
     if name == ModelName.LOGISTIC:
