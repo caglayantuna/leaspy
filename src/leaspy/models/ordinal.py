@@ -12,7 +12,7 @@ from leaspy.utils.weighted_tensor import (
     WeightedTensor,
     unsqueeze_right,
 )
-from leaspy.variables.distributions import Normal
+from leaspy.variables.distributions import Normal, Ordinal
 from leaspy.variables.specs import (
     LVL_FT,
     Hyperparameter,
@@ -136,7 +136,11 @@ class OrdinalModel(LogisticModel):
             deltas[feature] = torch.log(torch.clamp(torch.tensor(delays), min=0.1))
 
         # we set the undefined deltas to be infinity to extend validity of formulas for them as well (and to avoid computations)
-        deltas_ = float("inf") * torch.ones((len(deltas), self.max_level - 1))
+        tiny_value = 1e-6  # for example
+        deltas_ = torch.full(
+            (len(deltas), self.max_level - 1),
+            tiny_value,
+        )
         for i, name in enumerate(deltas):
             deltas_[i, : len(deltas[name])] = deltas[name]
         parameters["log_deltas_mean"] = deltas_
