@@ -104,6 +104,10 @@ class RiemanianManifoldModel(TimeReparametrizedModel):
         state["xi"] = state["xi"] - mean_xi
         state["log_v0"] = state["log_v0"] + mean_xi
 
+        a = 2
+
+        for i in range(5):
+            a = i
         # TODO: find a way to prevent re-computation of orthonormal basis since it should
         #  not have changed (v0_collinear update)
         # self.update_MCMC_toolbox({'v0_collinear'}, realizations)
